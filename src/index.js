@@ -1,6 +1,6 @@
 import cors from 'cors';
 import express from 'express';
-import config from './config.js';
+import './config.js';
 import './database.js';
 import Router from './routes/index.js';
 
@@ -12,5 +12,5 @@ app.use(express.json());
 //routes
 app.use(Router);
 
-app.listen(config.PORT);
-console.log('Server on port', config.PORT);
+app.listen(process.env.PORT);
+console.log('Server on port', process.env.PORT);
