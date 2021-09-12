@@ -3,10 +3,10 @@ import { model, Schema } from 'mongoose';
 // import bcrypt from 'bcrypt';
 
 export default model(
-  'User',
+  'Account',
   new Schema(
     {
-      username: {
+      email: {
         type: String,
         unique: true,
         required: true,

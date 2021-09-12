@@ -1,29 +1,28 @@
 import jwt from 'jsonwebtoken';
-import User from '../models';
+import Account from '../models';
 
 export async function checkIfAlreadyExists(req, res) {
-  const { username } = req.body;
+  const { email } = req.body;
 
-  const userFound = await User.findOne({ username });
+  const userFound = await Account.findOne({ email });
 
   if (userFound)
-    return res.json({ exists: true, message: 'User already exists' });
+    return res.json({ exists: true, message: 'Account already exists' });
 
   res.json({ exists: false });
 }
 
-export async function serverSignUp(req, res) {
-  const { username, password } = req.body;
+export async function fitToolSignUp(req, res) {
+  const { email, password } = req.body;
 
-  const userFound = await User.findOne({ username });
+  const userFound = await Account.findOne({ email });
 
   if (userFound)
-    return res.status(400).json({ message: 'User already exists' });
+    return res.status(400).json({ message: 'Account already exists' });
 
-  const newUser = new User({
-    username,
-    password: await User.encryptPassword(password),
-    mode: 'SERVER',
+  const newUser = new Account({
+    email,
+    password: await Account.encryptPassword(password),
   });
 
   try {
@@ -36,13 +35,13 @@ export async function serverSignUp(req, res) {
 }
 
 export async function signIn(req, res) {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  const userFound = await User.findOne({ username });
+  const userFound = await Account.findOne({ email });
 
-  if (!userFound) return res.json({ message: 'User not found' });
+  if (!userFound) return res.json({ message: 'Account not found' });
 
-  const matchPassword = await User.comparePassword(
+  const matchPassword = await Account.comparePassword(
     password,
     userFound.password,
   );
@@ -68,14 +67,14 @@ export async function facebookSignIn(req, res) {
     if (error) res.status(401).json(error);
   }
 
-  let user = await User.findOne({
-    username: response.data.id,
+  let user = await Account.findOne({
+    email: response.data.id,
     mode,
   });
 
   if (!user) {
-    const newUser = new User({
-      username: userId,
+    const newUser = new Account({
+      email: userId,
       mode,
     });
 
@@ -106,14 +105,14 @@ export async function googleSignIn(req, res) {
     if (error) res.status(401).json(error);
   }
 
-  let user = await User.findOne({
-    username: response.data.sub,
+  let user = await Account.findOne({
+    email: response.data.sub,
     mode,
   });
 
   if (!user) {
-    const newUser = new User({
-      username: userId,
+    const newUser = new Account({
+      email: userId,
       mode,
     });
 
