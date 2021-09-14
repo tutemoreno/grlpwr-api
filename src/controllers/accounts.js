@@ -1,15 +1,21 @@
 import jwt from 'jsonwebtoken';
-import Account from '../models';
+import { Account } from '../models';
 
-export async function checkIfAlreadyExists(req, res) {
+export async function checkEmailAvailability(req, res) {
   const { email } = req.body;
 
   const userFound = await Account.findOne({ email });
 
   if (userFound)
-    return res.json({ exists: true, message: 'Account already exists' });
-
-  res.json({ exists: false });
+    res.send({
+      available: true,
+      notifications: [{ message: 'The Email is already in use', type: 'info' }],
+    });
+  else
+    res.send({
+      available: false,
+      notifications: [{ message: 'Email is available', type: 'info' }],
+    });
 }
 
 export async function fitToolSignUp(req, res) {
