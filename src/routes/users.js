@@ -1,6 +1,6 @@
 import { Router } from 'express';
 // import { verifyToken } from '../middlewares';
-import { checkEmailAvailability, signIn } from '../controllers/accounts.js';
+import { checkEmailAvailability, signIn } from '../controllers/users.js';
 
 const router = Router();
 

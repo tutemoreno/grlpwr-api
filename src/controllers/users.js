@@ -1,34 +1,44 @@
 import jwt from 'jsonwebtoken';
-import { Account } from '../models';
+import { User } from '../models';
 
 export async function checkEmailAvailability(req, res) {
   const { email } = req.body;
 
-  const userFound = await Account.findOne({ email });
+  try {
+    const userFound = await User.findOne({ email });
 
-  if (userFound)
-    res.send({
-      available: true,
-      notifications: [{ message: 'The Email is already in use', type: 'info' }],
-    });
-  else
-    res.send({
-      available: false,
-      notifications: [{ message: 'Email is available', type: 'info' }],
-    });
+    if (userFound)
+      res.send({
+        available: true,
+        notifications: [
+          { message: 'The Email is already in use', type: 'info' },
+        ],
+      });
+    else
+      res.send({
+        available: false,
+        notifications: [{ message: 'Email is available', type: 'info' }],
+      });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export async function fitToolSignUp(req, res) {
   const { email, password } = req.body;
 
-  const userFound = await Account.findOne({ email });
+  try {
+    const userFound = await User.findOne({ email });
 
-  if (userFound)
-    return res.status(400).json({ message: 'Account already exists' });
+    if (userFound)
+      return res.status(400).json({ message: 'User already exists' });
+  } catch (error) {
+    console.log(error);
+  }
 
-  const newUser = new Account({
+  const newUser = new User({
     email,
-    password: await Account.encryptPassword(password),
+    password: await User.encryptPassword(password),
   });
 
   try {
@@ -43,11 +53,11 @@ export async function fitToolSignUp(req, res) {
 export async function signIn(req, res) {
   const { email, password } = req.body;
 
-  const userFound = await Account.findOne({ email });
+  const userFound = await User.findOne({ email });
 
-  if (!userFound) return res.json({ message: 'Account not found' });
+  if (!userFound) return res.json({ message: 'User not found' });
 
-  const matchPassword = await Account.comparePassword(
+  const matchPassword = await User.comparePassword(
     password,
     userFound.password,
   );
@@ -73,13 +83,13 @@ export async function facebookSignIn(req, res) {
     if (error) res.status(401).json(error);
   }
 
-  let user = await Account.findOne({
+  let user = await User.findOne({
     email: response.data.id,
     mode,
   });
 
   if (!user) {
-    const newUser = new Account({
+    const newUser = new User({
       email: userId,
       mode,
     });
@@ -111,13 +121,13 @@ export async function googleSignIn(req, res) {
     if (error) res.status(401).json(error);
   }
 
-  let user = await Account.findOne({
+  let user = await User.findOne({
     email: response.data.sub,
     mode,
   });
 
   if (!user) {
-    const newUser = new Account({
+    const newUser = new User({
       email: userId,
       mode,
     });
