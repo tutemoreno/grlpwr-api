@@ -1,29 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { User } from '../models';
 
-export async function checkEmailAvailability(req, res) {
-  const { email } = req.body;
-
-  try {
-    const userFound = await User.findOne({ email });
-
-    if (userFound)
-      res.send({
-        available: true,
-        notifications: [
-          { message: 'The Email is already in use', type: 'info' },
-        ],
-      });
-    else
-      res.send({
-        available: false,
-        notifications: [{ message: 'Email is available', type: 'info' }],
-      });
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 export async function fitToolSignUp(req, res) {
   const { email, password } = req.body;
 

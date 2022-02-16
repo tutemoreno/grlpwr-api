@@ -12,7 +12,7 @@ User.init(
       type: INTEGER,
       unique: true,
     },
-    email: {
+    username: {
       allowNull: false,
       type: STRING,
       unique: true,
@@ -20,14 +20,6 @@ User.init(
     password: {
       type: STRING,
       allowNull: false,
-    },
-    firstName: {
-      allowNull: false,
-      type: STRING,
-    },
-    lastName: {
-      allowNull: false,
-      type: STRING,
     },
   },
   { sequelize },

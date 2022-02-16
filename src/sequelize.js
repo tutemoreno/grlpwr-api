@@ -11,19 +11,9 @@ const sequelize = new Sequelize({
   // logging: console.log,
 });
 
-// await db.sync({ force: true });
-// const db = new Sequelize({
-//   username: 'sa',
-//   password: 'sql',
-//   host: 'localhost',
-//   port: 1433,
-//   dialect: 'mssql',
-//   database: 'master',
-//   logging: console.log,
-// });
-
 async function testConnection() {
   try {
+    await sequelize.sync({ force: true });
     await sequelize.authenticate();
     console.log('Connection has been established successfully.');
   } catch (error) {
